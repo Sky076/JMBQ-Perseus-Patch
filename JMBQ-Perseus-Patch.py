@@ -102,7 +102,7 @@ def download_jmbq_perseus_lib():
     packages_dir = Path("packages")
 
     try:
-        api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+        api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/tags/3.3.0"
         response = requests.get(api_url, timeout=10)
         response.raise_for_status()
         release_data = response.json()
