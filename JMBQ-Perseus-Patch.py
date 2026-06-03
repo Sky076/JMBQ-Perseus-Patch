@@ -102,7 +102,7 @@ def download_jmbq_perseus_lib():
     packages_dir = Path("packages")
 
     try:
-        api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/tags/3.3.0"
+        api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
         response = requests.get(api_url, timeout=10)
         response.raise_for_status()
         release_data = response.json()
@@ -124,7 +124,7 @@ def download_jmbq_perseus_lib():
                     f.write(chunk)
 
         asset_name = temp_file.name
-        version_match = re.search(r"MOD_MENU_([\d\.]+)\.(rar|zip|7z)", asset_name)
+        version_match = re.search(r"MOD_MENU_([\d\.]+)", asset_name)
         mod_version = version_match.group(1)
         logging.info(f"mod_version: {mod_version}")
 
