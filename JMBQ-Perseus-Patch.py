@@ -116,26 +116,12 @@ def download_jmbq_perseus_lib():
 
         download_url = target_asset["browser_download_url"]
         temp_file = Path(f"temp_{target_asset['name']}")
-        exist_mod_file = list(packages_dir.glob(f"{asset_pattern}*.rar")) + \
-                             list(packages_dir.glob(f"{asset_pattern}*.zip")) + \
-                             list(packages_dir.glob(f"{asset_pattern}*.7z"))
-        if exist_mod_file:
-            local_asset_file = exist_mod_file[0]
-            cp_cmd = ["cp", str(local_asset_file), "."]
-            cp_result = subprocess.run(
-                cp_cmd,
-                capture_output=True,
-                text=True
-            )
-            if cp_result.returncode != 0:
-                raise RuntimeError(f"cp failed: {cp_result.stderr}")
-            temp_file = Path(local_asset_file.name)
-        else:
-            with requests.get(download_url, stream=True, timeout=30) as r:
-                r.raise_for_status()
-                with open(temp_file, "wb") as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        f.write(chunk)
+        # 强制从网络下载，无视本地旧文件
+        with requests.get(download_url, stream=True, timeout=30) as r:
+            r.raise_for_status()
+            with open(temp_file, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
 
         asset_name = temp_file.name
         version_match = re.search(r"MOD_MENU_([\d\.]+)\.(rar|zip|7z)", asset_name)
